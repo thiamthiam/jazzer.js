@@ -4,14 +4,14 @@
 // TODO Once the fuzzer module is converted to TS, make this a normal import. Moreover, when we add out-of-process fuzzing, we need to conditionally require either the libfuzzer module or the native agent, depending on whether we're doing in-process or out-of-process fuzzing.
 const fuzzer = require("@fuzzy-eagle/fuzzer/fuzzer"); // eslint-disable-line @typescript-eslint/no-var-requires
 
-// TODO: Pass request for next counter to native plugin
-let counter = 0;
 export function nextCounter(): number {
-	return counter++;
+	return fuzzer.requestCoverageCounter();
 }
 
 // TODO: incrementCounter applies the never-zero policy
-export function incrementCounter(id: number) {}
+export function incrementCounter(id: number) {
+	fuzzer.coverageCounters[id]++;
+}
 
 export function traceStrCmp(s1: string, s2: string, operator: string): boolean {
 	let result = false;
