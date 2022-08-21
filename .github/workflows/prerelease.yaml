@@ -2,41 +2,43 @@ name: "🏗️ Prerelease"
 
 on:
   push:
+    branches:
+      - windows-prebuild
     tags:
       - "v*.*.*"
 
 jobs:
-  create_release:
-    name: create release
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write # for creating releases
-
-    steps:
-      - name: checkout
-        uses: actions/checkout@v3
-      - name: read version
-        id: read-version
-        run: |
-          echo ::set-output name=version::\
-          $(cat ./package.json | jq '.version' | tr -d '"')
-        shell: bash
-      - name: create release
-        uses: softprops/action-gh-release@v1
-        with:
-          name: Release ${{ steps.read-version.outputs.version }}
-          body_path: ./.github/release_template.md
-          generate_release_notes: true
-          draft: false # creating drafts conflicts with prebuild
-          prerelease: true # using a prerelease instead
+  #  create_release:
+  #    name: create release
+  #    runs-on: ubuntu-latest
+  #    permissions:
+  #      contents: write # for creating releases
+  #
+  #    steps:
+  #      - name: checkout
+  #        uses: actions/checkout@v3
+  #      - name: read version
+  #        id: read-version
+  #        run: |
+  #          echo ::set-output name=version::\
+  #          $(cat ./package.json | jq '.version' | tr -d '"')
+  #        shell: bash
+  #      - name: create release
+  #        uses: softprops/action-gh-release@v1
+  #        with:
+  #          name: Release ${{ steps.read-version.outputs.version }}
+  #          body_path: ./.github/release_template.md
+  #          generate_release_notes: true
+  #          draft: false # creating drafts conflicts with prebuild
+  #          prerelease: true # using a prerelease instead
 
   prebuilds:
     name: create prebuilds
     runs-on: ${{ matrix.os }}
-    needs: [create_release]
+    #    needs: [create_release]
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-11, windows-latest]
+        os: [windows-latest]
     steps:
       - name: checkout
         uses: actions/checkout@v3
