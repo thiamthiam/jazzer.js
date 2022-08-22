@@ -44,6 +44,7 @@ jobs:
         if: contains(matrix.os, 'macos')
         run: |
           brew install cmake
+          echo "TEST"
           echo "SDKROOT=$(xcrun --sdk macosx --show-sdk-path)" >> $GITHUB_ENV
           echo "LDFLAGS=$(llvm-config --ldflags)" >> $GITHUB_ENV
           echo "CFLAGS=$(llvm-config --cflags)" >> $GITHUB_ENV
