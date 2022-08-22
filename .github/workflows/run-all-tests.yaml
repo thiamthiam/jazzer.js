@@ -43,17 +43,14 @@ jobs:
       - name: install dependencies (macos)
         if: contains(matrix.os, 'macos')
         run: |
-          brew install cmake llvm@11
-          LLVM_PATH=$(brew --prefix llvm@11)
-          LLVM_VERSION=11.1.0
+          brew install cmake
           echo "SDKROOT=$(xcrun --sdk macosx --show-sdk-path)" >> $GITHUB_ENV
-          echo "CPATH=$LLVM_PATH/lib/clang/$LLVM_VERSION/include/" >> $GITHUB_ENV
-          echo "LDFLAGS=-L$LLVM_PATH/lib" >> $GITHUB_ENV
-          echo "CPPFLAGS=-I$LLVM_PATH/include" >> $GITHUB_ENV
-          echo "CC=$LLVM_PATH/bin/clang" >> $GITHUB_ENV
-          echo "CXX=$LLVM_PATH/bin/clang++" >> $GITHUB_ENV
-          echo "LLVM_CONFIG_PATH=$LLVM_PATH/bin/llvm-config" >> $GITHUB_ENV
-          echo "PATH=$PATH:$LLVM_PATH/bin" >> $GITHUB_ENV
+          echo "LDFLAGS=$(llvm-config --ldflags)" >> $GITHUB_ENV
+          echo "CFLAGS=$(llvm-config --cflags)" >> $GITHUB_ENV
+          echo "CC=clang" >> $GITHUB_ENV
+          echo "CPPFLAGS=$(llvm-config --cppflags)" >> $GITHUB_ENV
+          echo "CXX=clang++" >> $GITHUB_ENV
+          echo "CXXFLAGS=$(llvm-config --cxxflags)" >> $GITHUB_ENV
       - name: install dependencies (windows)
         if: contains(matrix.os, 'windows')
         run: |
